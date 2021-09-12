@@ -30,9 +30,9 @@ fn movement(
             0.
         };
 
-        let y_dir = if keyboard_input.pressed(KeyCode::Up) {
+        let y_dir = if keyboard_input.pressed(KeyCode::Down) {
             -1.
-        } else if keyboard_input.pressed(KeyCode::Right) {
+        } else if keyboard_input.pressed(KeyCode::Up) {
             1.
         } else {
             0.
@@ -84,7 +84,8 @@ fn ferris_spawn(
                 material: materials.ferris.clone(),
                 ..Default::default()
             })
-            .insert(Ferris);
+            .insert(Ferris)
+            .insert(Speed::default());
         ferris_state.spawned();
     }
 }
