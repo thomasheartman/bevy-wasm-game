@@ -25,11 +25,13 @@ pkgs.mkShell {
           rust-std
           rustc
           rustfmt-preview
+          targets.wasm32-unknown-unknown.latest.rust-std
         ]
       )
     )
     cargo-edit
     cargo-watch
+    cargo-make
 
     lld
     clang
@@ -47,6 +49,10 @@ pkgs.mkShell {
     vulkan-headers
     vulkan-loader
     vulkan-validation-layers
+
+    # wasm(?) requirements
+    openssl
+    wasm-bindgen-cli
   ];
 
 }

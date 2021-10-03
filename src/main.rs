@@ -103,14 +103,19 @@ fn setup(
 }
 
 fn main() {
-    App::build()
-        .insert_resource(ClearColor(Color::rgb(0.04, 0.04, 0.04)))
+    let mut app = App::build();
+    app.add_plugins(DefaultPlugins);
+
+    #[cfg(target_arch = "wasm32")]
+    app.add_plugin(bevy_webgl2::WebGL2Plugin);
+
+    app.insert_resource(ClearColor(Color::rgb(0.04, 0.04, 0.04)))
         .insert_resource(WindowDescriptor {
             title: "2D Bevs".into(),
             ..Default::default()
         })
-        .add_plugins(DefaultPlugins)
         .add_plugin(FerrisPlugin)
-        .add_startup_system(setup.system())
-        .run();
+        .add_startup_system(setup.system());
+
+    app.run();
 }
