@@ -1,10 +1,7 @@
 { pkgs ? import <nixpkgs> {} }:
 
-let
 
-  fenix = import (fetchTarball "https://github.com/nix-community/fenix/archive/main.tar.gz") {};
 
-in
 
 pkgs.mkShell {
   shellHook = ''export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:${pkgs.lib.makeLibraryPath [
@@ -14,21 +11,7 @@ pkgs.mkShell {
   ]}"'';
 
   buildInputs = with pkgs; [
-    (
-      with fenix;
-      combine (
-        with default; [
-          cargo
-          clippy-preview
-          latest.rust-src
-          rust-analyzer
-          rust-std
-          rustc
-          rustfmt-preview
-          targets.wasm32-unknown-unknown.latest.rust-std
-        ]
-      )
-    )
+
     cargo-edit
     cargo-watch
     cargo-make
@@ -52,7 +35,7 @@ pkgs.mkShell {
 
     # wasm(?) requirements
     openssl
-    wasm-bindgen-cli
+    rustup
   ];
 
 }
