@@ -52,7 +52,6 @@ pkgs.mkShell {
 
     # wasm(?) requirements
     openssl
-    wasm-bindgen-cli
   ];
 
 }
