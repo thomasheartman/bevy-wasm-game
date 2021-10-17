@@ -52,6 +52,7 @@ pkgs.mkShell {
 
     # wasm(?) requirements
     openssl
+    rustup
   ];
 
 }
