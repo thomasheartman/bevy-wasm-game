@@ -1,10 +1,12 @@
 use bevy::{core::FixedTimestep, prelude::*};
 
 const FERRIS: &str = "ferris.png";
+const ENV: &str = "tiles.png";
 const TIME_STEP: f32 = 1. / 60.;
 
 pub struct Materials {
     ferris: Handle<ColorMaterial>,
+    env: Handle<ColorMaterial>,
 }
 
 struct Ferris;
@@ -90,6 +92,18 @@ fn ferris_spawn(
     }
 }
 
+// #[derive(Component)]
+struct Floor {
+    speed: f32,
+}
+
+// #[derive(Component)]
+enum Obstacle {
+    Bottom(u8),
+    Top(u8),
+    Both(u8, u8),
+}
+
 fn setup(
     mut commands: Commands,
     asset_server: Res<AssetServer>,
@@ -97,8 +111,18 @@ fn setup(
 ) {
     commands.spawn_bundle(OrthographicCameraBundle::new_2d());
 
+    commands
+        .spawn_bundle(SpriteBundle {
+            material: materials.add(Color::rgb(0.5, 0.5, 1.0).into()),
+            transform: Transform::from_xyz(0.0, -215.0, 0.0),
+            sprite: Sprite::new(Vec2::new(120., 30.0)),
+            ..Default::default()
+        })
+        .insert(Floor { speed: 500. });
+
     commands.insert_resource(Materials {
         ferris: materials.add(asset_server.load(FERRIS).into()),
+        env: materials.add(asset_server.load(ENV).into()),
     });
 }
 
@@ -115,7 +139,23 @@ fn main() {
             ..Default::default()
         })
         .add_plugin(FerrisPlugin)
-        .add_startup_system(setup.system());
+        .add_startup_system(setup.system())
+        .add_system_set(
+            SystemSet::new()
+                .with_run_criteria(FixedTimestep::step(TIME_STEP as f64))
+                .with_system(env_movement_system.system()),
+        );
 
     app.run();
+}
+
+fn env_movement_system(mut query: Query<(&Floor, &mut Transform)>) {
+    // for (env, mut transform) in query.iter_mut() {
+    //     let translation = &mut transform.translation;
+    //     translation.x += env.speed * TIME_STEP;
+    // }
+
+    if let Ok((env, mut transform)) = query.single_mut() {
+        transform.translation.x -= env.speed * TIME_STEP;
+    }
 }
