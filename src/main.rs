@@ -150,12 +150,7 @@ fn main() {
 }
 
 fn env_movement_system(mut query: Query<(&Floor, &mut Transform)>) {
-    // for (env, mut transform) in query.iter_mut() {
-    //     let translation = &mut transform.translation;
-    //     translation.x += env.speed * TIME_STEP;
-    // }
-
-    if let Ok((env, mut transform)) = query.single_mut() {
+    for (env, mut transform) in query.iter_mut() {
         transform.translation.x -= env.speed * TIME_STEP;
     }
 }
